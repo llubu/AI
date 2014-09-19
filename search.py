@@ -154,7 +154,7 @@ def breadthFirstSearch(problem):
   init_place = (-1, -1)
   state.push(problem.getStartState()) #initial state of the problem
   parent_rel[problem.getStartState()] = init_place
-  path[problem.getStartState()] = "none"
+  path[problem.getStartState()] = "NULL"
   visited.add(problem.getStartState())
   target = 0
   
