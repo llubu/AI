@@ -212,34 +212,50 @@ def uniformCostSearch(problem):
   state.push(problem.getStartState(), 0) #initial state of the problem
   parent_rel[problem.getStartState()] = init_place
   path[problem.getStartState()] = "NULL"
-  visited.add(problem.getStartState())
+  #visited.add(problem.getStartState())
   target = 0
   cost[problem.getStartState()] = 0     # cost to reach itself should be 0
+  target_cost = sys.maxint
     
   while not state.isEmpty():
       tmp_goal = state.pop()
+      #print tmp_goal
+      
+      if tmp_goal in visited:
+          #print "YO YO"
+          continue
+          
       children = problem.getSuccessors(tmp_goal)
+      visited.add(tmp_goal)
       #print type(children)
       #children.reverse()
       #print children
+      if cost[tmp_goal] > target_cost:
+          #print "NONO"
+          break
       for child in children:
+          #print "CHILD LOOP"
           if child[0] not in visited:
               if problem.isGoalState(child[0]):
-                  target = child[0]
-                  parent_rel[child[0]] = tmp_goal
-                  path[child[0]] = child[1]
-                  cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
-                  break
+                  if (cost[tmp_goal] +child[2] < target_cost):
+                      target = child[0]
+                      parent_rel[child[0]] = tmp_goal
+                      path[child[0]] = child[1]
+                      cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
+                      target_cost = cost[tmp_goal] + child[2]
+                      print "Target Cost", target_cost
+                      break
               else:
                   state.push(child[0], cost[tmp_goal] + child[2])
-                  visited.add(child[0])
+                  #visited.add(child[0])
                   parent_rel[child[0]] = tmp_goal
                   path[child[0]] = child[1]
                   cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
-              
+                             
   #Reconstructing Path from initial state to goal state
-  #print "Came out of first loop"
-  #print target, parent_rel[target], path[target]
+  print "Came out of first loop"
+  print target 
+  #parent_rel[target], path[target]
   if target == 0:
       return []
   else: # Traverse back till initial node is found
@@ -249,8 +265,6 @@ def uniformCostSearch(problem):
           
   out_path.reverse() # reversing since we are moving back from goal to initial state
   return out_path
-
-  
   
 
 def nullHeuristic(state, problem=None):
@@ -263,7 +277,78 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  
+  from game import Directions
+  South = Directions.SOUTH
+  West = Directions.WEST
+  North = Directions.NORTH
+  East = Directions.EAST
+  
+  state = util.PriorityQueue() # Keeps track of the state till now
+  parent_rel = dict()  # Dict to keep track of parent of a given node 
+  path = dict()        # To keep track of the direction of a node to reconstruct the path 
+  out_path = list()    # To return the reconstruct path
+  visited = set()      # To keep track of visited node
+  cost = dict()        # Keeps tarck of the cost to reach to that node
+   
+  init_place = (-1, -1)
+  state.push(problem.getStartState(), 0) #initial state of the problem
+  parent_rel[problem.getStartState()] = init_place
+  path[problem.getStartState()] = "NULL"
+  #visited.add(problem.getStartState())
+  target = 0
+  cost[problem.getStartState()] = 0     # cost to reach itself should be 0
+  target_cost = sys.maxint
+    
+  while not state.isEmpty():
+      tmp_goal = state.pop()
+      #print tmp_goal
+      
+      if tmp_goal in visited:
+          #print "YO YO"
+          continue
+          
+      children = problem.getSuccessors(tmp_goal)
+      visited.add(tmp_goal)
+      #print type(children)
+      #children.reverse()
+      #print children
+      if cost[tmp_goal] + heuristic(tmp_goal,problem) > target_cost:
+          #print "NONO"
+          break
+      for child in children:
+          #print "CHILD LOOP"
+          if child[0] not in visited:
+              if problem.isGoalState(child[0]):
+                  if (cost[tmp_goal] + child[2] < target_cost):
+                      target = child[0]
+                      parent_rel[child[0]] = tmp_goal
+                      path[child[0]] = child[1]
+                      cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
+                      target_cost = cost[tmp_goal] + child[2]
+                      print "Target Cost", target_cost
+                      break
+              else:
+                  state.push(child[0], heuristic(child[0],problem) + cost[tmp_goal] + child[2])
+                  #visited.add(child[0])
+                  parent_rel[child[0]] = tmp_goal
+                  path[child[0]] = child[1]
+                  cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
+                             
+  #Reconstructing Path from initial state to goal state
+  print "Came out of first loop"
+  print target 
+  #parent_rel[target], path[target]
+  if target == 0:
+      return []
+  else: # Traverse back till initial node is found
+      while (parent_rel[target] != init_place):
+          out_path.append(path[target])
+          target = parent_rel[target]
+          
+  out_path.reverse() # reversing since we are moving back from goal to initial state
+  return out_path
+  
     
   
 # Abbreviations
