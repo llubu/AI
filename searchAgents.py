@@ -278,6 +278,7 @@ class CornersProblem(search.SearchProblem):
     
     ##################
 
+    #This starting position is a tuple with the coordinates and a list of the corners 
     self.startPosCor = (startingGameState.getPacmanPosition(), self.corners)
         
     
@@ -290,6 +291,8 @@ class CornersProblem(search.SearchProblem):
     "Returns whether this search state is a goal state of the problem"
     "*** YOUR CODE HERE ***"
     #print "STATE: ", state[1]
+    
+    #We know the goal state is reached when the corner list is empty 
     if len(state[1])==0:
         return True
     else:
@@ -311,11 +314,16 @@ class CornersProblem(search.SearchProblem):
     for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
       # Add a successor state to the successor list if the action is legal
       # Here's a code snippet for figuring out whether a new position hits a wall:
+         
+         #Current State
          curState = state[0]
          #print "CUR STATE: ", curState
+         
+         #Corner List
          cornerList = state[1]
          #print "CORNER LIST: ", cornerList
          
+         #If current state is one of the corners, remove it from the corner list 
          if curState in cornerList:
              newTup = []
              for tup in cornerList:
@@ -329,7 +337,7 @@ class CornersProblem(search.SearchProblem):
          hitsWall = self.walls[nextx][nexty]
          if not self.walls[nextx][nexty]:
              nextState = (nextx, nexty)
-             #cost = self.costFn(nextState)
+             #Append cornerList to coordinates
              successors.append( ( (nextState,cornerList), action, 1) )
      
       
@@ -495,7 +503,23 @@ def foodHeuristic(state, problem):
   """
   position, foodGrid = state
   "*** YOUR CODE HERE ***"
-  return 0
+  
+  #print "FOOD GRID! : ",foodGrid
+  #print "Position! : ",position
+  
+  tmp = 0
+  ht = foodGrid.height
+  wt = foodGrid.width
+  
+  #The heuristic is the sum of the manhanttan distances to all food nodes 
+  #We feel that this heuristic is both admissible and consistent
+  for i in range(wt):
+      for j in range(ht):
+          if foodGrid[i][j] == True:
+              tmp += abs(position[0]-i) + abs(position[1] - j)
+        
+
+  return tmp
   
 class ClosestDotSearchAgent(SearchAgent):
   "Search for all food using a sequence of searches"
