@@ -180,7 +180,7 @@ def breadthFirstSearch(problem):
               
   #Reconstructing Path from initial state to goal state
   print "Came out of first loop"
-  print target, parent_rel[target], path[target]
+  #print target, parent_rel[target], path[target]
   if target == 0:
       return []
   else:
