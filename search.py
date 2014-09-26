@@ -96,7 +96,7 @@ def depthFirstSearch(problem):
   out_path = list()    # To return the reconstruct path
   visited = set()      # To keep track of visited node
   
-  init_place = (-1, -1)
+  init_place = (-1, -1) # To denote the initial state to make the path reconstruct loop terminate
   state.push(problem.getStartState()) #initial state of the problem
   parent_rel[problem.getStartState()] = init_place
   path[problem.getStartState()] = "NULL"
@@ -206,7 +206,7 @@ def uniformCostSearch(problem):
   path = dict()        # To keep track of the direction of a node to reconstruct the path 
   out_path = list()    # To return the reconstruct path
   visited = set()      # To keep track of visited node
-  cost = dict()        # Keeps tarck of the cost to reach to that node
+  cost = dict()        # Keeps tarck of the cost to reach to that node cost to rach parent + its cost to reach from parent
    
   init_place = (-1, -1)
   state.push(problem.getStartState(), 0) #initial state of the problem

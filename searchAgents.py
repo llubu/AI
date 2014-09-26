@@ -372,17 +372,16 @@ def cornersHeuristic(state, problem):
   it should be admissible.  (You need not worry about consistency for
   this heuristic to receive full credit.)
   """
-  corners = problem.corners # These are the corner coordinates
+corners = problem.corners # These are the corner coordinates
   walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
   
   "*** YOUR CODE HERE ***"
-  
-  list_of_corners = list(state[1])
-  pos = state[0]
+  list_of_corners = list(state[1]) #contains the list of all the crners
+  pos = state[0] #variable to hold the position                                      
   cost = 0
-  cost_list = []
-  cost_min = 0
-  min_val = 0
+  cost_list = [] #list of all the cost calculated so far
+  cost_min = 0   #min cost
+  min_val = 0    # node whose min is calculated
   
   if len(list_of_corners) > 0:
         for i in range(len(list_of_corners)):
@@ -391,16 +390,17 @@ def cornersHeuristic(state, problem):
         cost_min = min(cost_list)
         
         min_val = cost_list.index(cost_min)
-        corner_min = list_of_corners[min_val]
-    
+        corner_min = list_of_corners[min_val]   #corner with the min cost 
+        
         total_cost = 0
         min_val = 0
         cost_min2 = 0
         list_of_corners.remove(corner_min)
+        # finding the cost of corner closest from the remaining corners to the one found above
         while len(list_of_corners) > 0:
             cost_list = []
             pos = corner_min
-            #find the shorted dstance from corner_min
+            #find the min cost from corner_min
             for i in range(len(list_of_corners)):
                 corner_pos = list_of_corners[i]
                 cost_list.append(abs(pos[0] - corner_pos[0]) +abs(pos[1] -corner_pos[1]))
@@ -409,7 +409,6 @@ def cornersHeuristic(state, problem):
             corner_min = list_of_corners[min_val]
             list_of_corners.remove(corner_min)
             total_cost = total_cost +cost_min
-  
         cost = cost_min2 +total_cost
   return cost
   
