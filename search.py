@@ -212,13 +212,14 @@ def uniformCostSearch(problem):
   state.push(problem.getStartState(), 0) #initial state of the problem
   parent_rel[problem.getStartState()] = init_place
   path[problem.getStartState()] = "NULL"
-  #visited.add(problem.getStartState())
   target = 0
   cost[problem.getStartState()] = 0     # cost to reach itself should be 0
-  target_cost = sys.maxint
+  target_cost = float("inf")
+  #print target_cost
     
   while not state.isEmpty():
       tmp_goal = state.pop()
+      #print tmp_goal, cost[tmp_goal]
       #print tmp_goal
       
       if tmp_goal in visited:
@@ -231,11 +232,12 @@ def uniformCostSearch(problem):
       #children.reverse()
       #print children
       if cost[tmp_goal] > target_cost:
-          #print "NONO"
+          #print "NONO", cost[tmp_goal], tmp_goal, target_cost
           break
       for child in children:
-          #print "CHILD LOOP"
+          #print "CHILD LOOP", child
           if child[0] not in visited:
+              #print "CHILD --1"
               if problem.isGoalState(child[0]):
                   if (cost[tmp_goal] +child[2] < target_cost):
                       target = child[0]
@@ -243,18 +245,19 @@ def uniformCostSearch(problem):
                       path[child[0]] = child[1]
                       cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
                       target_cost = cost[tmp_goal] + child[2]
-                      print "Target Cost", target_cost
+                   #   print "Target Cost", target_cost
                       break
               else:
+                  print "In else"
                   state.push(child[0], cost[tmp_goal] + child[2])
-                  #visited.add(child[0])
                   parent_rel[child[0]] = tmp_goal
                   path[child[0]] = child[1]
                   cost[child[0]] = cost[tmp_goal] + child[2] # cost to reach from tmp_goal to its child
+                  #print child[2], cost[child[0]]
                              
   #Reconstructing Path from initial state to goal state
-  print "Came out of first loop"
-  print target 
+  #print "Came out of first loop"
+  #print target 
   #parent_rel[target], path[target]
   if target == 0:
       return []
@@ -298,7 +301,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
   #visited.add(problem.getStartState())
   target = 0
   cost[problem.getStartState()] = 0     # cost to reach itself should be 0
-  target_cost = sys.maxint
+  target_cost = float("inf")
     
   while not state.isEmpty():
       tmp_goal = state.pop()
