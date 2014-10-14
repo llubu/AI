@@ -15,7 +15,7 @@
 
 from util import manhattanDistance
 from game import Directions
-import random, util
+import sys, random, util
 
 from game import Agent
 
@@ -41,6 +41,8 @@ class ReflexAgent(Agent):
         """
         # Collect legal moves and successor states
         legalMoves = gameState.getLegalActions()
+        #print legalMoves
+        legalMoves.remove('Stop')
 
         # Choose one of the best actions
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
@@ -68,14 +70,56 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
-        successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
+        sucGameState = currentGameState.generatePacmanSuccessor(action)
+        capsuleList =  sucGameState.getCapsules()
+        #print action
+        newPos = sucGameState.getPacmanPosition()
+        #print newPos
+        newFood = sucGameState.getFood()
+        #print newFood
+        #print ""
+        #print len(newFood.asList())
+        newGhostStates = sucGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
-
+        #print newScaredTimes
+        #print sucGameState.getScore()
+            
+        minScore = -sys.maxint -1
+        
+        if sucGameState.isWin():
+            return sys.maxint
+        if sucGameState.isLose():
+            return minScore
+            
+        distFromGhost = sys.maxint
+        ghostDistList = [] #Stores distance to each ghost 
+        isActive = [] #Stores bool value : Whether ghost is active or not. Ghosts kill when active
+        
+        for ghost in newGhostStates:
+            distFromGhost = manhattanDistance(newPos, ghost.getPosition())
+            if (ghost.scaredTimer==0): #Ghost is currently active
+                isActive.append(True)
+                ghostDistList.append(distFromGhost) 
+                if distFromGhost < 2: # Return min score if ghost is close : We want pacman to run from the ghost 
+                    return minScore
+            else:
+                isActive.append(False)
+                ghostDistList.append(-distFromGhost) #You may want to go closer to the ghost 
+                   
+           
+        foodLeft = len(newFood.asList()) #You want less food left      
+        distToFood = 0
+        for food in newFood.asList():
+            distToFood += manhattanDistance(newPos, food)
+            
+        for capsule in capsuleList:
+            #print manhattanDistance(newPos, capsule)
+            if manhattanDistance(newPos, capsule) < 1:
+                #print "CLOSE"
+                return sys.maxint
+        
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        return sucGameState.getScore() + (float(sum(ghostDistList))/distToFood)
 
 def scoreEvaluationFunction(currentGameState):
     """
