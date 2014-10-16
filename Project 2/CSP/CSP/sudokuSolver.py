@@ -178,31 +178,6 @@ def isValid(puzzle, row, col, val):
 	
 def sudokuBT(puzzle):
 	#print "Entering BT"
-	"""
-	rcList = [0, 0]
-	print "RC-*", rcList,
-	retPos = anyEmpty(puzzle, rcList)
-	row = rcList[0]
-	col = rcList[1]
-	print "RC", row, col, rcList
-	if not retPos:
-		return True
-	for val in range(1, 10):
-		#print row, col
-		if isValid(puzzle, row, col, val):
-			puzzle[row][col] = val
-			print row, col, val
-		if sudokuBT(puzzle):
-			print "IS TRUE"
-			sys.exit()
-			return True
-		else:
-			print "BACKTRACKED", row, col
-			sys.exit()
-			puzzle[row][col] = 0 # Backtrack
-	return False
-	"""
-	#Iterative
 	row = 0
 	col = 0
 	val = 1
