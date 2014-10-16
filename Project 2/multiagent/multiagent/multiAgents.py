@@ -155,6 +155,51 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
       Your minimax agent (question 2)
     """
+    
+    # Max function of Min-Max algorithm
+    def maxAgent(self, gameState, depth):
+      
+      # this function maximises the score of PacMan
+      #By default the PacMan will stop
+      action_to_be_performed = Directions.STOP
+      #for Win/Lose state or zero depth we can return direction
+      if  gameState.isWin() or gameState.isLose() or depth==0:
+        return [self.evaluationFunction(gameState), action_to_be_performed]
+      allowedMoves = gameState.getLegalActions(0)
+      # get rid of "STOP" action from list of allowed moves
+      actionList = [action for action in allowedMoves if action != 'Stop' ]
+      maxVal = float("-inf")
+      for action in actionList:
+        # Now for all the actions in action list call minAgen with depth=depth-1
+        returnedVal = self.minAgent(gameState.generateSuccessor(0,action), depth-1)
+        if(returnedVal[0] > maxVal):
+          maxVal = returnedVal[0]
+          action_to_be_performed = action
+      print maxVal
+      return [maxVal, action_to_be_performed]
+
+
+    # Min function of Min-Max algorithm
+    def minAgent(self, gameState, depth):
+      
+      action_to_be_performed = Directions.STOP
+      if gameState.isWin() or gameState.isLose() or depth==0 :
+        return [self.evaluationFunction(gameState), Directions.STOP]
+      agentCount = gameState.getNumAgents()
+      minVal = float("inf")
+      #perform same action for all the ghost since for every ghost 
+      for i in range(1,agentCount):
+        allowedMoves = gameState.getLegalActions(i)
+        # get rid of "STOP" action from list of allowed moves
+        actionList = [action for action in allowedMoves if action != 'Stop' ]
+        for action in actionList:
+          # Now for all the actions in action list call maxAgent for all ghost with same depth to play their move
+          returnedVal =  self.maxAgent(gameState.generateSuccessor(i,action), depth)
+          if(returnedVal[0] < minVal):
+            minVal = returnedVal[0]
+            action_to_be_perfored = action
+      print minVal
+      return [minVal, action_to_be_performed]
 
     def getAction(self, gameState):
         """
@@ -174,18 +219,73 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
+        return self.maxAgent(gameState, self.depth)[1]
         util.raiseNotDefined()
+        
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
       Your minimax agent with alpha-beta pruning (question 3)
     """
+    # Max function of Min-Max algorithm
+    def maxAgent(self, gameState, depth, a, b):
+      
+      # this function maximises the score of PacMan
+      #By default the PacMan will stop
+      action_to_be_performed = Directions.STOP
+      #for Win/Lose state or zero depth we can return direction
+      if  gameState.isWin() or gameState.isLose() or depth==0:
+        return [self.evaluationFunction(gameState), action_to_be_performed]
+      allowedMoves = gameState.getLegalActions(0)
+      # get rid of "STOP" action from list of allowed moves
+      actionList = [action for action in allowedMoves if action != 'Stop' ]
+      maxVal = float("-inf")
+      for action in actionList:
+        # Now for all the actions in action list call minAgen with depth=depth-1
+        returnedVal = self.minAgent(gameState.generateSuccessor(0,action), depth-1, a, b)
+        if(returnedVal[0] > maxVal):
+          maxVal = returnedVal[0]
+          action_to_be_performed = action
+        if maxVal > b:
+          return [maxVal, action_to_be_performed]
+        a = max(a,maxVal)
+      print maxVal
+      return [maxVal, action_to_be_performed]
+
+
+    # Min function of Min-Max algorithm
+    def minAgent(self, gameState, depth, a, b):
+      
+      action_to_be_performed = Directions.STOP
+      if gameState.isWin() or gameState.isLose() or depth==0 :
+        return [self.evaluationFunction(gameState), Directions.STOP]
+      agentCount = gameState.getNumAgents()
+      minVal = float("inf")
+      #perform same action for all the ghost since for every ghost 
+      for i in range(1,agentCount):
+        allowedMoves = gameState.getLegalActions(i)
+        # get rid of "STOP" action from list of allowed moves
+        actionList = [action for action in allowedMoves if action != 'Stop' ]
+        for action in actionList:
+          # Now for all the actions in action list call maxAgent for all ghost with same depth to play their move
+          returnedVal =  self.maxAgent(gameState.generateSuccessor(i,action), depth, a, b)
+          if(returnedVal[0] < minVal):
+            minVal = returnedVal[0]
+            action_to_be_perfored = action
+          if minVal < a:
+            return [minVal, action_to_be_performed]
+          b = min(b, minVal)
+      print minVal
+      return [minVal, action_to_be_performed]
 
     def getAction(self, gameState):
         """
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        minVal = float("-inf")
+        maxVal = float("inf")
+        return self.maxAgent(gameState, self.depth, minVal, maxVal)[1]
         util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):

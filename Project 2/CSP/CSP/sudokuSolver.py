@@ -187,7 +187,7 @@ def sudokuBT(puzzle):
 	last = []
 	flag = False
 	find = True
-	dump = open('dump.txt', 'w')
+	#dump = open('dump.txt', 'w')
 	while True:
 		while val < end:
 			flag = False
@@ -200,13 +200,13 @@ def sudokuBT(puzzle):
 							col = i
 							flag = True
 							find = False
-							dump.write("Found AN EMPTY CELL"+str(row)+str(col)+'\n')
+							#dump.write("Found AN EMPTY CELL"+str(row)+str(col)+'\n')
 							#print 'FOUND EMPTY CELL', row, col
 							break
 					if flag:
 						break
 				if not flag:
-					dump.write( 'Sudoku DONE\n')
+					#dump.write( 'Sudoku DONE\n')
 					print " DONE", puzzle
 					return puzzle
 				
@@ -215,24 +215,24 @@ def sudokuBT(puzzle):
 				#print 'VALID FOR', row, col, val,
 				puzzle[row][col] = val
 				state.push([row, col, val]) # Keep track of the state for Backtracking
-				dump.write( 'Pushing State' + str(row) + str(col) + str(val) +'\n')
+				#dump.write( 'Pushing State' + str(row) + str(col) + str(val) +'\n')
 				#print 'PUSHING', row, col, val
 				val = 1
 				find = True
 			else:
 				#dump.write( 'Not valid for' + str(row)+ str(col) + str(val)+'\n')
 				if val >= 9: #No solution found for this backtrack now
-					dump.write( 'Not valid for ANY _ BT NOW' + str(row)+ str(col) + str(val)+'\n')
+					#dump.write( 'Not valid for ANY _ BT NOW' + str(row)+ str(col) + str(val)+'\n')
 					#print 'Not valid for', row, col, val
 					if not state.isEmpty():
 						boo = state.peek()
 						if boo[2] == 9:
 							last = state.pop()
-							dump.write('Poping State - for 9-' + str(last) + '\n')
+							#dump.write('Poping State - for 9-' + str(last) + '\n')
 							puzzle[last[0]][last[1]] = 0 #Backtracking
 						last = state.pop()
 						#print 'DOING BT', last
-						dump.write('Poping State' + str(last) + '\n')
+						#dump.write('Poping State' + str(last) + '\n')
 						puzzle[last[0]][last[1]] = 0 #Backtracking
 						val = last[2] + 1
 						if val > 9:
@@ -241,7 +241,7 @@ def sudokuBT(puzzle):
 				else:
 					val += 1
 							
-	dump.close()
+	#dump.close()
 	
 	
 def solve_puzzle(puzzle, argv):
