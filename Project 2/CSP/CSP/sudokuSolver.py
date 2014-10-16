@@ -247,7 +247,13 @@ def sudokuBT(puzzle):
 def solve_puzzle(puzzle, argv):
 	"""Solve the sudoku puzzle."""
 	print "Entering Solving"
-	"""
+	
+	if argv[1] == "backtracking":
+		print "Starting BT"
+		puzzle = sudokuBT(puzzle)
+		#print "BT", puzzle
+		return puzzle
+	
 	if argv[1] == "MRV":
 		print "Starting MRV"
 		for k in range(9):
@@ -259,14 +265,9 @@ def solve_puzzle(puzzle, argv):
 		#print "NEW PRINT", "\n", puzzle
 		clean(puzzle)
         sol = sudoku_solve(puzzle)
-		"""
+		
 	print "END OF MRV"
-	if argv[1] == "backtracking":
-		print "Starting BT"
-		puzzle = sudokuBT(puzzle)
-		#print "BT", puzzle
-		return puzzle
-		"""
+	
 	print sol, '\n\n'
 	ret_sol = []
 	print sol
@@ -276,7 +277,7 @@ def solve_puzzle(puzzle, argv):
 			nl.append(vl[0])
 		ret_sol.append(nl)
 	return ret_sol
-	"""
+	
 
 #===================================================#
 puzzle = load_sudoku('puzzle.txt')
