@@ -1,0 +1,15 @@
+Average score : 1059
+
+We first compute the Manhattan distance to each ghost and verify if the ghost is active or not. If the ghost is active,
+it can kill pacman. We store the the Manhattan distance to each active ghost and the negative of the Manhattan distance
+to each inactive ghost in a list. 
+
+We store the negative distance for an inactive ghost as we would like to eat that ghost. It is not necessary to eact the
+inactive ghost, but we believe this strategy results in better scores. 
+
+Also if we notice the the manhattan distance to the ghost reaches 1, we run away from the ghost by returning the minimum
+integer value as the score for going the ghost's direction. We tried higher values for this and stuck woth 1 as this 
+gives best performance. 
+
+We also compute the sum of manhattan distances to all the food left. The sum of the distances to ghosts is divided by
+the the sum of manhattan distances to the food. This number is then added to the score returned.
