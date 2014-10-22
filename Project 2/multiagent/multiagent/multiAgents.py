@@ -175,7 +175,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         if(returnedVal[0] > maxVal):
           maxVal = returnedVal[0]
           action_to_be_performed = action
-      print maxVal
       return [maxVal, action_to_be_performed]
 
 
@@ -198,7 +197,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
           if(returnedVal[0] < minVal):
             minVal = returnedVal[0]
             action_to_be_perfored = action
-      print minVal
       return [minVal, action_to_be_performed]
 
     def getAction(self, gameState):
@@ -234,7 +232,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
       #By default the PacMan will stop
       action_to_be_performed = Directions.STOP
       #for Win/Lose state or zero depth we can return direction
-      if  gameState.isWin() or gameState.isLose() or depth==0:
+      #print depth
+      if  gameState.isWin() or gameState.isLose() or depth<=0:
         return [self.evaluationFunction(gameState), action_to_be_performed]
       allowedMoves = gameState.getLegalActions(0)
       # get rid of "STOP" action from list of allowed moves
@@ -249,7 +248,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         if maxVal > b:
           return [maxVal, action_to_be_performed]
         a = max(a,maxVal)
-      print maxVal
       return [maxVal, action_to_be_performed]
 
 
@@ -257,7 +255,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def minAgent(self, gameState, depth, a, b):
       
       action_to_be_performed = Directions.STOP
-      if gameState.isWin() or gameState.isLose() or depth==0 :
+      #print depth
+      if gameState.isWin() or gameState.isLose() or depth<=0 :
         return [self.evaluationFunction(gameState), Directions.STOP]
       agentCount = gameState.getNumAgents()
       minVal = float("inf")
@@ -275,7 +274,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           if minVal < a:
             return [minVal, action_to_be_performed]
           b = min(b, minVal)
-      print minVal
       return [minVal, action_to_be_performed]
 
     def getAction(self, gameState):

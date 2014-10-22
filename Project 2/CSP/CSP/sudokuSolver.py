@@ -22,8 +22,16 @@ import util
 # For example: python sudokuSolver.py backtracking
 
 from copy import copy, deepcopy
-# Head ends here
-def remove_possibilities(a): #for MRV check
+
+
+"""
+@param a: Sudoku grid.
+
+This function removes the given value from MRV list of
+all cells in corresponding row, col and 3x3 matrix.
+
+"""
+def remove_possibilities(a): # For MRV check
   change = True
   while change:
     change = False
@@ -41,7 +49,18 @@ def remove_possibilities(a): #for MRV check
               if(value[0] in a[i][j]):
                 change=True
                 a[i][j].remove(value[0])
+"""
+@param a: Sudoku grid
+@return: True/False
 
+This function finds a cell which has a value which does not appear
+in any other cell in the corresponding row, column and 3x3 matrix. These cells
+are defined as singleton cell. This value is then assigned to this cell and remove_possibility()
+is called which removes that value from all cells in that row, col & 3x3 matrix.
+Returns false if any such previous assignment causes a constraint violation which triggers 
+backtracking in recursive calls. 
+
+"""
 def find_singleton(a):
   #print "input to singleton is"
   #print a
@@ -95,7 +114,18 @@ def find_singleton(a):
            return True;
         j=j+1;
   return False
+  
+"""
+@param grid: Sudoku Grid
+@return: True/False
 
+This function internally calls remove_possibility() to remove
+values which are already assigned from MRV list of unassigned cells.
+The last while True loop will run until there are no new singleton value cells,
+It also checks if assigning this singleton value to that cell result in any unassigned
+cell whose MRV list len is 0, If yes then the previous assignment is not valid assignment & it returns
+False to trigger backtrack. 
+"""
 def clean(grid):
   
   remove_possibilities(grid)
@@ -115,6 +145,17 @@ def clean(grid):
            return False
   return grid
 
+"""
+@param grid: The Sudoku grid
+@return: Solved sudoku grid
+
+This function solves the sudoku grid by using MRV herustic+FC+AC.
+A state is maintained for MRV for each unassigned cell and with each 
+new assignment we remove that possibility from corresonding row, col &3x3 matrix.
+Also we check if making this assignment leads to any MRV list len reduced to 0 if yes then 
+this assignment is invalid and we backtrack. We also check for MRV list which contains an element
+which appears only in one unassigned cell and we assign that value to that cell and check for contraints.
+"""
 def sudoku_solve(grid):
 
   if all(len(grid[i/9][i%9]) == 1 for i in range(81)):
@@ -154,7 +195,17 @@ def sudoku_solve(grid):
       return e
   return False;
 
-# Check if a given val is valid for the puzzle
+"""
+@param puzzle: Sudoku grid
+@param row: Row of the current cell in consideration
+@param col:Column of the current cell in consideration
+@param val: Possible value to be assigned to this cell
+@return: True/False
+
+Check if a given val is valid for the puzzle.
+i.e checks if val does not appear in any cell in 
+given column, row or 3x3 matrix corresponding to that (row, column).
+"""
 def isValid(puzzle, row, col, val):
 	
 	for index in range(9):
@@ -175,7 +226,14 @@ def isValid(puzzle, row, col, val):
 				#print 'RET FALSE FOR BOX', xi, yi
 				return False
 	return True
-	
+"""
+@param puzzle: The Sudoku grid
+@return: A solved Sudoku grid
+
+This function implements the normal backtracking 
+solution for solving given sudoku.
+Travers through all cells in column oriented manner
+"""	
 def sudokuBT(puzzle):
 	#print "Entering BT"
 	row = 0
@@ -183,19 +241,20 @@ def sudokuBT(puzzle):
 	val = 1
 	end = 10
 	rcList = [0, 0]
-	state = util.Stack()
+	state = util.Stack() # Maintains the state for the solved cells, to facilitate backtracking
 	last = []
 	flag = False
 	find = True
 	#dump = open('dump.txt', 'w')
+    
 	while True:
 		while val < end:
-			flag = False
+			flag = False # Helps in breaking out of nested loop
 			#i = 0, j = 0
-			if find:
-				for i in range(9):
+			if find: # Prevents this loop from running until we have assigned a value to the current cell
+				for i in range(9): # Find a new empty cell to work on
 					for j in range(9):
-						if puzzle[j][i] == 0:
+						if puzzle[j][i] == 0: 
 							row = j
 							col = i
 							flag = True
@@ -208,25 +267,25 @@ def sudokuBT(puzzle):
 				if not flag:
 					#dump.write( 'Sudoku DONE\n')
 					print " DONE", puzzle
-					return puzzle
+					return puzzle # Sudoku is solved return the solved grid 
 				
-			if isValid(puzzle, row, col, val):
+			if isValid(puzzle, row, col, val): # Find out if the current value is a valid value for current cell
 				#dump.write( 'valid for' + str(row)+ str(col) + str(val) +'\n')
 				#print 'VALID FOR', row, col, val,
-				puzzle[row][col] = val
+				puzzle[row][col] = val # If valid assign the value to the cell & push the[row, col, val] in the stack.
 				state.push([row, col, val]) # Keep track of the state for Backtracking
 				#dump.write( 'Pushing State' + str(row) + str(col) + str(val) +'\n')
 				#print 'PUSHING', row, col, val
 				val = 1
 				find = True
-			else:
+			else: # If value is not valid 
 				#dump.write( 'Not valid for' + str(row)+ str(col) + str(val)+'\n')
-				if val >= 9: #No solution found for this backtrack now
+				if val >= 9: # No solution found for this backtrack now
 					#dump.write( 'Not valid for ANY _ BT NOW' + str(row)+ str(col) + str(val)+'\n')
 					#print 'Not valid for', row, col, val
-					if not state.isEmpty():
+					if not state.isEmpty(): #pop to backtrack 
 						boo = state.peek()
-						if boo[2] == 9:
+						if boo[2] == 9: # If previous value assigned to this cell was 9 then backtrack one more step as no value is valid for this cell
 							last = state.pop()
 							#dump.write('Poping State - for 9-' + str(last) + '\n')
 							puzzle[last[0]][last[1]] = 0 #Backtracking
@@ -234,12 +293,12 @@ def sudokuBT(puzzle):
 						#print 'DOING BT', last
 						#dump.write('Poping State' + str(last) + '\n')
 						puzzle[last[0]][last[1]] = 0 #Backtracking
-						val = last[2] + 1
+						val = last[2] + 1 # try values after the previous value assigned
 						if val > 9:
 							val = 1
 						find = True
 				else:
-					val += 1
+					val += 1 #Check other values which can be valid for this cell
 							
 	#dump.close()
 	
@@ -256,22 +315,22 @@ def solve_puzzle(puzzle, argv):
 	
 	if argv[1] == "MRV":
 		print "Starting MRV"
-		for k in range(9):
+		for k in range(9): # Modifies the given grid to maintain MRV state. Each 0 cell is replaced by list [1-9]
 			for l in range(9):
 				if puzzle[k][l] == 0:
 					puzzle[k][l]=[1,2,3,4,5,6,7,8,9]
 				else:
 					puzzle[k][l]=[puzzle[k][l]]
 		#print "NEW PRINT", "\n", puzzle
-		clean(puzzle)
-        sol = sudoku_solve(puzzle)
+		clean(puzzle) # Removes all already assigned cell from corresponding MRV list in same row, col and 3x3 matrix
+        sol = sudoku_solve(puzzle) # Solve now
 		
 	print "END OF MRV"
 	
 	print sol, '\n\n'
 	ret_sol = []
 	print sol
-	for line in sol:
+	for line in sol:   # For MRV solution parses the solved grid into format sudokuChecker is expecting.
 		nl = []
 		for vl in line:
 			nl.append(vl[0])
