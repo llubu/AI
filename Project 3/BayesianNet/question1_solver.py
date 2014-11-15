@@ -1,6 +1,7 @@
 class Question1_Solver:
     def __init__(self, cpt):
         self.cpt = cpt;
+        print self.cpt.conditional_prob("`", "b")
         return;
 
     #####################################
@@ -14,8 +15,60 @@ class Question1_Solver:
     #    self.cpt.conditional_prob("`", "b");
     # query example:
     #    query: "ques_ion";
-    #    return "t";
+    #    return "t";     
+    
+    
     def solve(self, query):
-        return "t";
+        
+        tmpWord = '`' + query + '`'
+        prevChar = '`'
+        prob = 1
+        finList = []
+        
+        print tmpWord
+        index = -1
+        
+        for char in tmpWord:
+            index += 1
+            if char == "_":
+                break
+        
+        #print index
+        
+        for char in tmpWord[1:index]:
+            #print prevChar, char
+            prob *= self.cpt.conditional_prob(char, prevChar)
+            prevChar = char
+        
+        #print "Break!!!"
+        
+        before = char
+        after = tmpWord[index+1]
+        
+        #print "Before, After : " , before, after
+        
+        prevChar = after
+            
+        for char in tmpWord[index+2:]:
+            #print prevChar, char
+            prob *= self.cpt.conditional_prob(char, prevChar)
+            prevChar = char
+            
+        
+        for i in xrange(97,123): 
+            newProb = prob * self.cpt.conditional_prob(chr(i), before) * self.cpt.conditional_prob(after , chr(i))
+            finList.append([chr(i), newProb])
+        
+        finList.sort(key=lambda x: x[1])
+        #print finList
+        res =  finList[25][0]
+        print res
+        print "\n\n\n"
+        
+        
+
+        
+        
+        return res;
 
 
