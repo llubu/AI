@@ -15,7 +15,44 @@ class Question2_Solver:
     # query example:
     #    query: "que__ion";
     #    return ["s", "t"];
-    def solve(self, query):
-        return ["s", "t"];
+    
+    
+    def solve(self, query): 
+        
+        tmpWord = '`' + query + '`'
+
+        index = -1
+        
+        for char in tmpWord:
+            index += 1
+            if char == "_":
+                break
+        
+        #print "Break!!!"
+        
+        before = tmpWord[index-1]
+        after = tmpWord[index+2]
+        
+        #print "Before, After : " , before, after
+            
+        maxProb = -1
+        maxChar1 = "a"
+        maxChar2 = "b"
+        
+        for i in xrange(97,123):
+            for j in xrange(97,123):  
+                char1 = chr(i)
+                char2 = chr(j)
+                
+                currProb = self.cpt.conditional_prob(char1, before) * self.cpt.conditional_prob(char2, char1) * self.cpt.conditional_prob(after , char2)
+                
+                if currProb > maxProb:
+                    maxProb = currProb
+                    maxChar1 = char1
+                    maxChar2 = char2
+                
+        
+        
+        return [maxChar1, maxChar2];
 
 
