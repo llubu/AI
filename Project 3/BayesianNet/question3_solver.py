@@ -2,7 +2,7 @@ class Question3_Solver:
     
     def __init__(self, cpt):
         self.cpt = cpt;
-        self.skip1 = self.createTable1()
+        self.skip1 = self.createTable1() 
         self.skip2 = self.createTable2()
 
     #####################################
@@ -17,32 +17,37 @@ class Question3_Solver:
     # query example:
     #    query: "qu--_--n";
     #    return "t";
+    
     def solve(self, query):
+        """
+        This function solves the given querry and
+        returns the letter which is most suitable.
+        """
         
-        query = '`' + query + '`'
-        uS = query.index('_')
-        tmp = query.split('_')
+        query = '`' + query + '`'  # Adding string end delimiters
+        uS = query.index('_')      # index of the underscore in the query string
+        tmp = query.split('_')       
         #print tmp
-        prevDash = tmp[0].count('-')
-        afterDash = tmp[1].count('-')
+        prevDash = tmp[0].count('-')  # Count of dashes before the underScore
+        afterDash = tmp[1].count('-') # Count of dashes after the underScore
         #print prevDash, afterDash
         
         if  0 != (uS - prevDash):
-            leftch = query[uS-prevDash -1]
+            leftch = query[uS-prevDash -1]  # Index of valid character before leftmost dash
         else:
             leftch = query[uS-prevDash]
         
         if len(query) != (uS + afterDash):
-            rtch = query[uS+afterDash +1]
+            rtch = query[uS+afterDash +1]   # Index of valid character after rightmost dash
         else:
             rtch = query[uS+afterDash]
             
         #print leftch, rtch
         
-        leftsum = 0
-        rtsum = 0
-        maxSum = -1
-        maxChar = '?'
+        leftsum = 0     # Sum of probalities for left dashes
+        rtsum = 0       # Sum of probabilities for right dashes
+        maxSum = -1     # Max sum for a particular letter in the loop
+        maxChar = '?'   # The character with maxSum
         
         for i in range(0, 26):
             if (0 == prevDash):

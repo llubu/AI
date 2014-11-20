@@ -19,17 +19,21 @@ class Question4_Solver:
     #            "in_elligence", "inter--_"];
     #    return "t";
     def solve(self, query):
+        """
+        Solves the given cross wors and returns the
+        valid character found
+        """
         
-        uS = [0 for i in range(0, 4)]
-        prevDash = [0 for i in range(0, 4)]
-        afterDash = [0 for i in range(0, 4)]
-        leftch = [0 for i in range(0, 4)]
-        rtch = [0 for i in range(0, 4)]
+        uS = [0 for i in range(0, 4)]               # Index of the underscore in the query
+        prevDash = [0 for i in range(0, 4)]         # Count of dashes before the underscore
+        afterDash = [0 for i in range(0, 4)]        # Count of dashes after the underscore
+        leftch = [0 for i in range(0, 4)]           # Index of valid char before the leftmost dash
+        rtch = [0 for i in range(0, 4)]             # Index of valid char after the rightmost dash
         
         #print '\n'
         #print uS, prevDash, afterDash, leftch, rtch
         
-        for i in range(0, 4):
+        for i in range(0, 4):                       # get all the values for 4 words in the query
             tmp = '`' + query[i] + '`'
             uS[i] = tmp.index('_')
             tmp1 = tmp.split('_')
@@ -50,15 +54,15 @@ class Question4_Solver:
                 
         #print prevDash, ':' , afterDash, ':' , leftch, ':', rtch
         
-        leftsum = 0
-        rtsum = 0
-        maxSum = -1
-        maxChar = '?'
+        leftsum = 0     # Sum of probabilities for the left dashes
+        rtsum = 0       # Sum of probabilities for the right dashes
+        maxSum = -1     # MAx sum found so far
+        maxChar = '?'   # character corresponding to maxSum
         
         for i in range(0, 26):
             ksum = 1
             
-            for k in range(0, 4):
+            for k in range(0, 4):   # Loop to consider all the 4 words in the query
                 if (0 == prevDash[k]):
                     leftsum = self.cpt.conditional_prob(chr(97+i) ,leftch[k])
                 if (1 == prevDash[k]):
