@@ -19,10 +19,12 @@ class Question1_Solver:
     
     def solve(self, query):
         
+        #Adding ` to begining and end of word to simplify logic
         tmpWord = '`' + query + '`'
 
         index = -1
         
+        #Search for index of _ in word
         for char in tmpWord:
             index += 1
             if char == "_":
@@ -30,14 +32,17 @@ class Question1_Solver:
         
         #print "Break!!!"
         
+        #Character before and after _
         before = tmpWord[index-1]
         after = tmpWord[index+1]
         
         #print "Before, After : " , before, after
-            
+
+        #Variables to keep track of maximum probability and the character     
         maxProb = -1
         maxChar = "a"
         
+        #Loop over all alphabets and find the character that results in highest probability 
         for i in xrange(97,123): 
             char = chr(i)
             currProb = self.cpt.conditional_prob(char, before) * self.cpt.conditional_prob(after , char)

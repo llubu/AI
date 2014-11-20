@@ -19,26 +19,31 @@ class Question2_Solver:
     
     def solve(self, query): 
         
+        #Adding ` to beginning and end of word to simplify logic
         tmpWord = '`' + query + '`'
 
         index = -1
         
+        #Search for index of _ in word
         for char in tmpWord:
             index += 1
             if char == "_":
                 break
         
         #print "Break!!!"
-        
+
+        #Character before and after _
         before = tmpWord[index-1]
         after = tmpWord[index+2]
         
         #print "Before, After : " , before, after
-            
+        
+        #Variables to keep track of maximum probability and the characters    
         maxProb = -1
         maxChar1 = "a"
         maxChar2 = "b"
         
+        #Loop over all combinations of two alphabets and find the characters that result in highest probability
         for i in xrange(97,123):
             for j in xrange(97,123):  
                 char1 = chr(i)
