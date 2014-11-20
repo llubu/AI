@@ -19,7 +19,7 @@ class Question1_Solver:
     
     def solve(self, query):
         
-        #Adding ` to begining and end of word to simplify logic
+        #Adding ` to beginning and end of word to simplify logic
         tmpWord = '`' + query + '`'
 
         index = -1
