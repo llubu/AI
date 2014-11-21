@@ -1,3 +1,6 @@
+import math
+import sys
+
 class Question4_Solver:
     def __init__(self, cpt):
         self.cpt = cpt;
@@ -47,42 +50,69 @@ class Question4_Solver:
             else:
                 leftch[i] = tmp[uS[i]-prevDash[i]]
                 
+            #print query[i]    
+            #print "tmp len: ", len(tmp)
+            #print uS[i]
+            #print afterDash[i]
+                
             if len(tmp) != (uS[i] + afterDash[i]):
                 rtch[i] = tmp[uS[i]+afterDash[i] +1]
             else:
                 rtch[i] = tmp[uS[i]+afterDash[i]]
                 
-        #print prevDash, ':' , afterDash, ':' , leftch, ':', rtch
+        #print "pd: " , prevDash, ' ad :' , afterDash, ' lc :' , leftch, ' rc :', rtch
         
         leftsum = 0     # Sum of probabilities for the left dashes
         rtsum = 0       # Sum of probabilities for the right dashes
         maxSum = -1     # MAx sum found so far
         maxChar = '?'   # character corresponding to maxSum
         
+        numZero = 0
+        zeroList = []
+        for i in range(4):
+            if prevDash[i]*afterDash[i] == 0:
+                numZero += 1
+                zeroList.append(0)
+            else:
+                zeroList.append(1)
+        
+        #print numZero, zeroList
+        
         for i in range(0, 26):
             ksum = 1
             
             for k in range(0, 4):   # Loop to consider all the 4 words in the query
-                if (0 == prevDash[k]):
-                    leftsum = self.cpt.conditional_prob(chr(97+i) ,leftch[k])
-                if (1 == prevDash[k]):
-                    leftsum = self.skip1[chr(97+i), leftch[k]]
-                if (2 == prevDash[k]):
-                    leftsum = self.skip2[chr(97+i), leftch[k]]
-                    
-                if (0 == afterDash[k]):
-                    rtsum = self.cpt.conditional_prob(rtch[k], chr(97+i))
-                if (1 == afterDash[k]):
-                    rtsum = self.skip1[rtch[k], chr(97+i)]
-                if (2 == afterDash):
-                    rtsum = self.skip2[rtch[k], chr(97+i)]
-                    
-                ksum *= leftsum*rtsum
+            
+                if (numZero > 2  and zeroList[k] == 0) or (numZero < 3):
+                
+                    if (0 == prevDash[k]):
+                        leftsum = self.cpt.conditional_prob(chr(97+i) ,leftch[k])
+                    if (1 == prevDash[k]):
+                        leftsum = self.skip1[chr(97+i), leftch[k]]
+                    if (2 == prevDash[k]):
+                        leftsum = self.skip2[chr(97+i), leftch[k]]
+                        
+                    if (0 == afterDash[k]):
+                        rtsum = self.cpt.conditional_prob(rtch[k], chr(97+i))
+                    if (1 == afterDash[k]):
+                        rtsum = self.skip1[rtch[k], chr(97+i)]
+                    if (2 == afterDash):    
+                        rtsum = self.skip2[rtch[k], chr(97+i)]
+                        
+                        
+                    ksum *= leftsum*rtsum
+                #if leftsum != 0 and rtsum != 0:
+                #    ksum += math.log(leftsum) + math.log(rtsum)
+                #else:
+                #    ksum = -sys.maxint - 2
+                
+            #print query, chr(97+i), ksum 
                 
             if ( maxSum < ksum ):
                 maxSum = ksum
                 maxChar = chr(97+i)
-                
+        
+        #print maxChar, query
         return maxChar;
     
     
