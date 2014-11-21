@@ -83,7 +83,7 @@ class Question4_Solver:
             
             for k in range(0, 4):   # Loop to consider all the 4 words in the query
             
-                if (numZero > 2  and zeroList[k] == 0) or (numZero < 3):
+                if (numZero > 1  and zeroList[k] == 0) or (numZero < 2):
                 
                     if (0 == prevDash[k]):
                         leftsum = self.cpt.conditional_prob(chr(97+i) ,leftch[k])
