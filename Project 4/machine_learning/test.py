@@ -1,5 +1,6 @@
 import math
 import sys
+from collections import OrderedDict
 
 choices = ['Y', 'N', '?']
     
@@ -12,7 +13,8 @@ def readData():
     
     for item in data:
         resRow = list()
-        params = list()
+        #params = list()
+        params = OrderedDict()
         
         row = item.split('\t')
         resRow.append(row[0])
@@ -22,12 +24,12 @@ def readData():
         
         for res in vals:
             if res == 'y':
-                params.append('y')
+                params[i] = 'y'
             if res == 'n':
-                params.append('n')
+                params[i] = 'n'
             if res == '?':
-                params.append('?')        
-        i += 1
+                params[i] = '?'        
+            i += 1
         
         resRow.append(params)
         sanData.append(resRow)
@@ -80,24 +82,24 @@ def bestAttr(curData):
     splitX = []
 
     #Compute Entropy for all attributes and find the attribute that leads to max drop in entropy
-    for i in range(len(curData[0][1])):
-        #print i
+    for attr in curData[0][1].items():
+        #print attr
         tabY = []
         tabN = []
         tabX = []
 
         #Split records on the basis of y,n,? into respective tables
-        for j in range(len(curData)):
-            if curData[j][1][i] == 'y':
-                tabY.append(curData[j])
-            elif curData[j][1][i] == 'n':
-                tabN.append(curData[j])
-            elif curData[j][1][i] == '?':
-                tabX.append(curData[j])
+        for row in curData:
+            if row[1][attr[0]] == 'y':
+                tabY.append(row)
+            elif row[1][attr[0]] == 'n':
+                tabN.append(row)
+            elif row[1][attr[0]] == '?':
+                tabX.append(row)
         
-        subY = [row[0] for row in tabY]
-        subN = [row[0] for row in tabN]
-        subX = [row[0] for row in tabX]
+        subY = [item[0] for item in tabY]
+        subN = [item[0] for item in tabN]
+        subX = [item[0] for item in tabX]
         
         #Compute Entropy for this attribute
         totRecords = len(subY) + len(subN) + len(subX)
@@ -108,7 +110,7 @@ def bestAttr(curData):
         
         if attrEnt < minEnt:
             minEnt = attrEnt
-            minInd = i
+            minInd = attr[0]
             
             splitY = tabY
             splitN = tabN
@@ -118,17 +120,19 @@ def bestAttr(curData):
 
     #print "Before: " , len(splitY[0][1])
     #We have to remove the attribute at minInd
+    
     for i in range(len(splitY)):
         del splitY[i][1][minInd]
-        #splitY[i][1][minInd] = "NULL"
+        
     for i in range(len(splitN)):
         del splitN[i][1][minInd]
-        #splitN[i][1][minInd] = "NULL"
+        
     for i in range(len(splitX)):
         del splitX[i][1][minInd]
-        #splitX[i][1][minInd] = "NULL"        
+               
         
     #print "After: " , len(splitY[0][1])
+    
     return minInd, [splitY, splitN, splitX]
 
 
@@ -136,16 +140,17 @@ def bestAttr(curData):
 #Function to create decision tree
 def createDecisionTree(data):
     
-    print "Len data: " , len(data)
-    print data
-    print ""
-    if len(data) == 0 or data[0][1].count("NULL") == 16:
-        return data
+    #print "Len data: " , len(data)
+    #print data
+    #print ""
+    
+    if len(data) == 0 or len(data[0][1]) == 0:
+       return ""
         
     bAttr, subSet = bestAttr(data)
     decTree = {bAttr:{}}
     
-    print bAttr
+    #print bAttr
     
     #print subSet[0]
     #print len(subSet[0][0][1])
@@ -156,27 +161,7 @@ def createDecisionTree(data):
     
     return decTree
     
-sanData = readData()  
-createDecisionTree(sanData)
-
-
-#We now have 3 subsets to recurse on    
-    
-# print "after: " , len(splitY[0][1])
-# print splitY[0][1]
-        
-
-
-
-#Split on the basis of attribute at index minInd
-    
-    
-    
-# print tabY
-# print ""
-# print tabN
-# print tabX
-
-#for item in sanData:
-    #print item
+sanData = readData()
+#print sanData , "\n\n\n"  
+print createDecisionTree(sanData)
 
