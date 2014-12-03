@@ -7,14 +7,18 @@ class Question3_Solver:
     # Add your code here.
     # Return the centroids of clusters.
     # You must use [(30, 30), (150, 30), (90, 130)] as initial centroids
+    #[(30, 60), (150, 60), (90, 130)]
     def solve(self, points):
-        centroids = [(30, 60), (150, 30), (90, 130)];
-        centroid1 = [(), (), ()]
+        centroids = [(30, 30), (150, 30), (90, 130)]
+        #centroids = [(30, 60), (150, 60), (90, 130)]
+        
         
         while(1):
-            final = [[],[],[]]
-            minIndex = -1
             
+            final = [[],[],[]]
+            centroid1 = [(), (), ()]
+            minIndex = -1
+            #print " LOOP START", centroids
             for point in points:
                 d1 = self.getDistance(centroids[0], point)
                 d2 = self.getDistance(centroids[1], point)
@@ -29,6 +33,7 @@ class Question3_Solver:
                 else:
                     minIndex = 1
                 
+                #print minIndex
                 final[minIndex].append(point)
             #print len(final[0]), len(final[1]), len(final[2]) 
                 
@@ -38,18 +43,15 @@ class Question3_Solver:
                 for item in final[i]:
                     xsum += item[0]
                     ysum += item[1]
-                        
-                centroid1[i] =(xsum/len(final[i]), ysum/len(final[i]))
-            print centroid1, 'CEN'
-            cd1 = self.getDistance(centroids[0], centroid1[0])
-            cd2 = self.getDistance(centroids[1], centroid1[1])
-            cd3 = self.getDistance(centroids[2], centroid1[2])
+                    
+                centroid1[i] = (xsum/len(final[i]), ysum/len(final[i]))
                 
-            if ( cd1 < 0.0001 and cd2 < 0.0001 and cd3 < 0.0001):
+            if ( centroid1[0] == centroids[0] and centroid1[1] == centroids[1] and centroid1[2] == centroids[2]):
                 break
             else:
                 centroids = centroid1
-                
+                centroid1 = [(), (), ()]
+
         return centroids;
     
     def getDistance(self, p1, p2):
