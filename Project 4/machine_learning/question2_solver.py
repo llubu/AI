@@ -34,7 +34,7 @@ class Question2_Solver:
         for attr in range(16):
             
             num = 0
-            i = float(0)
+            i = 0
             den = 0
             
             numY = i
@@ -61,13 +61,14 @@ class Question2_Solver:
                     elif row[1][attr] == '?':
                         numXr += 1
                         
-            #self.demDict[attr] = {'y':(float(numY))/(self.numDem + den), 'n':(float(numN))/(self.numDem + den), '?':(float(numX))/(self.numDem + den)}
-            #self.repDict[attr] = {'y':(float(numYr))/(self.numRep + den), 'n':(float(numNr))/(self.numRep + den), '?':(float(numXr))/(self.numRep + den)}
+            self.demDict[attr] = {'y':(float(numY))/(self.numDem), 'n':(float(numN))/(self.numDem), '?':(float(numX))/(self.numDem)}
+            self.repDict[attr] = {'y':(float(numYr))/(self.numRep), 'n':(float(numNr))/(self.numRep), '?':(float(numXr))/(self.numRep)}
             
-            self.demDict[attr] = {'y':(numY + num)/(self.numDem + den), 'n':(numN + num)/(self.numDem + den), '?':(numX + num)/(self.numDem + den)}
-            self.repDict[attr] = {'y':(numYr + num)/(self.numRep + den), 'n':(numNr + num)/(self.numRep + den), '?':(numXr + num)/(self.numRep + den)}
+            #self.demDict[attr] = {'y':(numY + num)/(self.numDem + den), 'n':(numN + num)/(self.numDem + den), '?':(numX + num)/(self.numDem + den)}
+            #self.repDict[attr] = {'y':(numYr + num)/(self.numRep + den), 'n':(numNr + num)/(self.numRep + den), '?':(numXr + num)/(self.numRep + den)}
             
         #print self.repDict
+        print 
         
         
         return;
@@ -87,7 +88,7 @@ class Question2_Solver:
             dem *= self.demDict[i][attrList[i]]
             rep *= self.repDict[i][attrList[i]]
         
-        if dem >= rep:
+        if dem > rep:
             return 'democrat'
         else:
             return 'republican'
