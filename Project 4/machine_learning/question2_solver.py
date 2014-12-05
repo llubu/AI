@@ -22,13 +22,10 @@ class Question2_Solver:
         self.numDem = classList.count('democrat')
         self.numRep = classList.count('republican')
         
-        self.demProb = float(self.numDem)/len(sanData)
-        self.repProb = float(self.numRep)/len(sanData)
+        self.demProb = float(self.numDem)/len(classList)
+        self.repProb = float(self.numRep)/len(classList)
         
-        #self.numDem += 3
-        #self.numRep += 3
-        
-        print self.demProb, self.repProb
+        #print self.numDem, self.numRep, len(classList)
         
         #Dicts to store probabilities
         self.demDict = dict() # Dict has a dict for each attr
@@ -36,8 +33,9 @@ class Question2_Solver:
 
         for attr in range(16):
             
-            #i = float(1)
-            i = 0
+            num = 0
+            i = float(0)
+            den = 0
             
             numY = i
             numN = i
@@ -63,9 +61,11 @@ class Question2_Solver:
                     elif row[1][attr] == '?':
                         numXr += 1
                         
-            self.demDict[attr] = {'y':(float(numY))/self.numDem, 'n':(float(numN))/self.numDem, '?':(float(numX))/self.numDem}
-            self.repDict[attr] = {'y':(float(numYr))/self.numRep, 'n':(float(numNr))/self.numRep, '?':(float(numXr))/self.numRep}
-
+            #self.demDict[attr] = {'y':(float(numY))/(self.numDem + den), 'n':(float(numN))/(self.numDem + den), '?':(float(numX))/(self.numDem + den)}
+            #self.repDict[attr] = {'y':(float(numYr))/(self.numRep + den), 'n':(float(numNr))/(self.numRep + den), '?':(float(numXr))/(self.numRep + den)}
+            
+            self.demDict[attr] = {'y':(numY + num)/(self.numDem + den), 'n':(numN + num)/(self.numDem + den), '?':(numX + num)/(self.numDem + den)}
+            self.repDict[attr] = {'y':(numYr + num)/(self.numRep + den), 'n':(numNr + num)/(self.numRep + den), '?':(numXr + num)/(self.numRep + den)}
             
         #print self.repDict
         

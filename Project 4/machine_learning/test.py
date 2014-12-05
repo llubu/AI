@@ -142,16 +142,29 @@ def createDecisionTree(data):
     
     #print "Len data: " , len(data)
     #print data
-    #print ""
+    #print "\n\n\n"
     
+    #If no attributes or no records are left, return majority class
     if len(data) == 0 or len(data[0][1]) == 0:
        return ""
+       
+    #If all records have the same class, return that class   
+    if len(data) == [row[0] for row in data].count("republican"):
+        # print "Rep! : " , [row[0] for row in data].count("republican")
+        # print data
+        # print "\n\n\n"
+        return "republican"
+    elif len(data) == [row[0] for row in data].count("democrat"):
+        # print "Dem! : " , [row[0] for row in data].count("democrat"), ""
+        # print data
+        # print "\n\n\n"
+        return "democrat"
         
+         
     bAttr, subSet = bestAttr(data)
     decTree = {bAttr:{}}
     
     #print bAttr
-    
     #print subSet[0]
     #print len(subSet[0][0][1])
     
