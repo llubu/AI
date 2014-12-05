@@ -12,18 +12,18 @@ class Question3_Solver:
         centroids = [(30, 30), (150, 30), (90, 130)]
         #centroids = [(30, 60), (150, 60), (90, 130)]
         
-        
         while(1):
-            
             final = [[],[],[]]
             centroid1 = [(), (), ()]
             minIndex = -1
-            #print " LOOP START", centroids
+            
+            #Get distance from each current centroid
             for point in points:
                 d1 = self.getDistance(centroids[0], point)
                 d2 = self.getDistance(centroids[1], point)
                 d3 = self.getDistance(centroids[2], point)
                 
+                #Find closest centroid
                 if d1 < d2:
                     minIndex = 0
                     if d3 < d1:
@@ -32,11 +32,10 @@ class Question3_Solver:
                     minIndex = 2
                 else:
                     minIndex = 1
-                
-                #print minIndex
+
                 final[minIndex].append(point)
-            #print len(final[0]), len(final[1]), len(final[2]) 
-                
+            
+            #Compute new centroid
             for i in range(0,3):
                 xsum = 0
                 ysum = 0
@@ -45,7 +44,8 @@ class Question3_Solver:
                     ysum += item[1]
                     
                 centroid1[i] = (xsum/len(final[i]), ysum/len(final[i]))
-                
+            
+            #If centroids don't change, terminate
             if ( centroid1[0] == centroids[0] and centroid1[1] == centroids[1] and centroid1[2] == centroids[2]):
                 break
             else:
@@ -58,7 +58,5 @@ class Question3_Solver:
         """
         Helper function to get the distance between two points p1 and p2
         """
-        #print 'points' , p1, p2
         dis = math.pow( math.pow (( p2[0] - p1[0]), 2) + math.pow (( p2[1] - p1[1]), 2),  0.5)
-        
         return dis
